@@ -1,7 +1,5 @@
 extends Node
 
-var SERVER_FLAG = true
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	multiplayer.peer_connected.connect(_on_player_connected)
@@ -11,7 +9,7 @@ func _ready():
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
 	Globals.chatlog_updated.connect(Globals._on_chatlog_update)
-	if SERVER_FLAG:
+	if Globals.SERVER_FLAG:
 		# Create a new global lobby
 		setup_server()
 	else:
@@ -39,17 +37,16 @@ func setup_client():
 func _on_player_connected(id):
 	print("New player connected!")
 	Globals.change_chatlog("New player connected.")
-	Globals._update_gamestate(multiplayer.get_unique_id(), Vector2(0, 0))
 	_register_player.rpc_id(id) # call_rpc_with_id(_register_player, id, player_info)
 
 @rpc("any_peer", "reliable")
 func _register_player():
 	var new_player_id = multiplayer.get_remote_sender_id()
 	Globals.change_chatlog("Player ID: {id}".format({"id": new_player_id}))
+	Globals._update_gamestate(new_player_id, Vector2(0, 0))
 
 func _on_player_disconnected(id):
-	print("Player ID {id} disconnected".format({"id": id}))
-	Globals.change_chatlog("New player connected.")
+	Globals.change_chatlog("Player ID {id} disconnected".format({"id": id}))
 	Globals.gamestate.erase(id)
 
 # This runs on the client only.

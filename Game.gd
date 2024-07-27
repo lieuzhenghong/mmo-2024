@@ -12,7 +12,8 @@ func _process(delta):
 	if Globals.gamestate.has(id):
 		player.position = Globals.gamestate[id]
 	else:
-		print("Game._process can't find id %d" % id)
+		pass
+		# print("Game._process can't find id %d" % id)
 	
 func _input(event):
 	# Check if the input event is a mouse button press
