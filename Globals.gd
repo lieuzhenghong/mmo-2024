@@ -8,6 +8,15 @@ func _update_gamestate(player_id, point):
 	if gamestate.find_key(player_id) != null:
 		gamestate[player_id] = point
 
+# TODO temporary function. In reality, players shouldn't be able to update the
+# gamestate like this: they should send inputs to the server and the server
+# will update the position.
+@rpc("any_peer", "unreliable")
+func _request_update_gamestate(point):
+	var player_id = multiplayer.get_remote_sender_id()
+	if gamestate.find_key(player_id) != null:
+		gamestate[player_id] = point
+
 var tick_rate = 0.1  # 100ms in seconds
 var time_since_last_tick = 0
 
@@ -44,6 +53,7 @@ func change_chatlog(new_string):
 func _on_chatlog_update():
 	_propagate_chatlog.rpc(chatlog)
 
+# Change "call_local" to "call_remote" if you don't want server to send message
 @rpc("any_peer", "call_local", "unreliable")
 func _request_update_chatlog(text):
 	# Server should check here. This is an example check
