@@ -18,7 +18,7 @@ func _ready():
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
-	Globals.chatlog_updated.connect(_on_chatlog_update)
+	Globals.chatlog_updated.connect(Globals._on_chatlog_update)
 	if OS.has_feature("server") or OS.has_feature("editor"):
 		# Create a new global lobby
 		setup_server()
@@ -46,7 +46,7 @@ func setup_client():
 # This allows transfer of all desired data for each player, not only the unique ID.
 func _on_player_connected(id):
 	print("New player connected!")
-	Globals.chatlog.push_back("New player connected.")
+	Globals.change_chatlog("New player connected.")
 	player_info.name = "Client_" + str(multiplayer.get_unique_id())
 	_register_player.rpc_id(id, player_info) # call_rpc_with_id(_register_player, id, player_info)
 
@@ -58,25 +58,14 @@ func _register_player(new_player_info):
 	Globals.players[new_player_id] = new_player_info
 	print(new_player_id, new_player_info)
 	
-	Globals.chatlog.push_back("Player ID: {id}".format({"id": new_player_id}))
-	Globals.chatlog_updated.emit()
-	
+	Globals.change_chatlog("Player ID: {id}".format({"id": new_player_id}))
 	# player_connected.emit(new_player_id, new_player_info)
 
 func _on_player_disconnected(id):
 	print("Player ID {id} disconnected".format({"id": id}))
-	Globals.chatlog.push_back("Player {id} disconnected".format({"id": id}))
-	Globals.chatlog_updated.emit()
+	Globals.change_chatlog("New player connected.")
 	Globals.players.erase(id)
 	# player_disconnected.emit(id)
-
-# When the chatlog updates, update the chatlog on all peers
-func _on_chatlog_update():
-	_update_chatlog.rpc(Globals.chatlog)
-
-@rpc("authority", "unreliable")
-func _update_chatlog(new_chatlog):
-	Globals.chatlog = new_chatlog
 
 # This runs on the client only.
 func _on_connected_ok():
