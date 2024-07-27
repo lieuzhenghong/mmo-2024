@@ -5,8 +5,8 @@ var SERVER_FLAG = false
 var gamestate = {}
 
 func _update_gamestate(player_id, point):
-	if gamestate.find_key(player_id) != null:
-		gamestate[player_id] = point
+	# if gamestate.find_key(player_id) != null:
+	gamestate[player_id] = point
 
 # TODO temporary function. In reality, players shouldn't be able to update the
 # gamestate like this: they should send inputs to the server and the server
