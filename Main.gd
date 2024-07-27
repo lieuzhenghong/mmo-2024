@@ -3,6 +3,7 @@ extends Node
 # signal player_disconnected(peer_id)
 # signal server_disconnected
 
+var SERVER_FLAG = true
 
 # This is the local player info. This should be modified locally
 # before the connection is made. It will be passed to every other peer.
@@ -19,7 +20,7 @@ func _ready():
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
 	Globals.chatlog_updated.connect(Globals._on_chatlog_update)
-	if OS.has_feature("server") or OS.has_feature("editor"):
+	if SERVER_FLAG:
 		# Create a new global lobby
 		setup_server()
 	else:
