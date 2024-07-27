@@ -11,7 +11,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	self.text = \"\"
+	self.text = '\\n'.join(Globals.chatlog)
 "
 
 [node name="Control" type="Control"]
