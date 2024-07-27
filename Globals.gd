@@ -19,6 +19,11 @@ func change_chatlog(new_string):
 func _on_chatlog_update():
 	_update_chatlog.rpc(Globals.chatlog)
 
+
+@rpc("any_peer", "unreliable")
+func _update_chatlog_request(new_chatlog):
+	_update_chatlog(new_chatlog)
+	
 @rpc("authority", "unreliable")
 func _update_chatlog(new_chatlog):
 	chatlog = new_chatlog

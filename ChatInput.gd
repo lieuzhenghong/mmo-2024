@@ -13,5 +13,5 @@ func _process(delta):
 
 func _on_button_pressed():
 	var text = get_node("TextEdit").get_text()
-	Globals.change_chatlog(text)
+	Globals._update_chatlog_request(text)
 	get_node("TextEdit").clear()
