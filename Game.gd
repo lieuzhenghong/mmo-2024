@@ -8,7 +8,11 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	var id = multiplayer.get_unique_id()
+	if Globals.gamestate.has(id):
+		player.position = Globals.gamestate[id]
+	else:
+		print("Game._process can't find id %d" % id)
 	
 func _input(event):
 	# Check if the input event is a mouse button press
