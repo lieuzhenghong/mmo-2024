@@ -18,14 +18,14 @@ func change_chatlog(new_string):
 func _on_chatlog_update():
 	_update_chatlog.rpc(chatlog)
 
-@rpc("any_peer", "call_remote", "unreliable")
+@rpc("any_peer", "call_local", "unreliable")
 func _update_chatlog_request(text):
 	# Server should check here. This is an example check
 	var sender_id = multiplayer.get_remote_sender_id()
 	if (text != "Donald"):
-		change_chatlog(sender_id + ": " + text)
+		change_chatlog(str(sender_id) + ": " + text)
 	else:
-		change_chatlog(sender_id + ": " + "GAYLORD") 
+		change_chatlog(str(sender_id) + ": " + "GAYLORD") 
 	
 @rpc("authority", "unreliable")
 func _update_chatlog(new_chatlog):

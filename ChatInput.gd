@@ -13,5 +13,5 @@ func _process(delta):
 
 func _on_button_pressed():
 	var text = get_node("TextEdit").get_text()
-	Globals._update_chatlog_request(text).rpc_id(1) # send only to the server
+	Globals._update_chatlog_request.rpc_id(1, text) # send only to the server
 	get_node("TextEdit").clear()
