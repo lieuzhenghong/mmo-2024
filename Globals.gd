@@ -5,7 +5,6 @@ extends Node
 var players = {}
 var players_loaded = 0
 
-
 # Chatlog global variable (in future, gamestate)
 var chatlog = PackedStringArray(["Hello World"])
 
@@ -19,10 +18,13 @@ func change_chatlog(new_string):
 func _on_chatlog_update():
 	_update_chatlog.rpc(Globals.chatlog)
 
-
-@rpc("any_peer", "unreliable")
-func _update_chatlog_request(new_chatlog):
-	_update_chatlog(new_chatlog)
+@rpc("any_peer", "call_remote", "unreliable")
+func _update_chatlog_request(text):
+	# Server should check here. This is an example check
+	if (text != "Donald"):
+		change_chatlog(text)
+	else:
+		change_chatlog("GAYLORD") 
 	
 @rpc("authority", "unreliable")
 func _update_chatlog(new_chatlog):
