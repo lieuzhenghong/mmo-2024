@@ -3,21 +3,26 @@ extends Node2D
 # Dictionary of int (id) -> Player
 # We will populate this from gamestate.
 var players = {}
-var player = preload("res://Player.tscn")
+var player_scene = preload("res://Player.tscn")
+
+func instantiate_player():
+	var player = player_scene.instantiate()
+	add_child(player)
+	player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	for id in Globals.gamestate.keys():
-		player.instantiate()
-		add_child(player)
+		var player = instantiate_player()
 		player.position = Globals.gamestate[id]
 		players[id] = player
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):	
 	for id in Globals.gamestate.keys():
-		players[id] = player.instantiate()
-		add_child(player)
+		if not (id in players.keys()):
+			var player = instantiate_player()
+			players[id] = player
 		
 	for id in players.keys():
 		var player = players[id]
