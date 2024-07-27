@@ -1,6 +1,6 @@
 extends Node
 
-var SERVER_FLAG = true
+var SERVER_FLAG = false
 # Gamestate
 var gamestate = {}
 
