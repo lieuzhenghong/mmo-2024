@@ -2,21 +2,13 @@ extends Node
 # signal player_connected(peer_id, player_info)
 # signal player_disconnected(peer_id)
 # signal server_disconnected
-signal chatlog_updated
 
-# This will contain player info for every player,
-# with the keys being each player's unique IDs.
-var players = {}
-
-var chatlog = PackedStringArray(["Hello World"])
 
 # This is the local player info. This should be modified locally
 # before the connection is made. It will be passed to every other peer.
 # For example, the value of "name" can be set to something the player
 # entered in a UI scene.
 var player_info = {"name": "Name"}
-
-var players_loaded = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -27,13 +19,13 @@ func _ready():
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	$Control/Button.pressed.connect(_on_button_pressed)
 	
-	chatlog_updated.connect(_on_chatlog_update)
-	if OS.has_feature("server"): # or OS.has_feature("editor"):
+	Globals.chatlog_updated.connect(Globals._on_chatlog_update)
+	if OS.has_feature("server") or OS.has_feature("editor"):
 		# Create a new global lobby
 		setup_server()
 	else:
 		setup_client()
-
+		
 const PORT = 6969
 const MAX_CLIENTS = 4
 const IP_ADDRESS = "192.168.18.30"
@@ -62,7 +54,7 @@ func setup_client():
 # This allows transfer of all desired data for each player, not only the unique ID.
 func _on_player_connected(id):
 	print("New player connected!")
-	chatlog.push_back("New player connected.")
+	Globals.change_chatlog("New player connected.")
 	player_info.name = "Client_" + str(multiplayer.get_unique_id())
 	_register_player.rpc_id(id, player_info) # call_rpc_with_id(_register_player, id, player_info)
 
@@ -71,34 +63,22 @@ func _register_player(new_player_info):
 	print("Updating player info")
 	var new_player_id = multiplayer.get_remote_sender_id()
 
-	players[new_player_id] = new_player_info
+	Globals.players[new_player_id] = new_player_info
 	print(new_player_id, new_player_info)
 	
-	chatlog.push_back("Player ID: {id}".format({"id": new_player_id}))
-	chatlog_updated.emit()
-	
+	Globals.change_chatlog("Player ID: {id}".format({"id": new_player_id}))
 	# player_connected.emit(new_player_id, new_player_info)
 
 func _on_player_disconnected(id):
 	print("Player ID {id} disconnected".format({"id": id}))
-	chatlog.push_back("Player {id} disconnected".format({"id": id}))
-	chatlog_updated.emit()
-	players.erase(id)
-	print(players)
+	Globals.change_chatlog("New player connected.")
+	Globals.players.erase(id)
 	# player_disconnected.emit(id)
-
-# When the chatlog updates, update the chatlog on all peers
-func _on_chatlog_update():
-	_update_chatlog.rpc(chatlog)
-
-@rpc("authority", "unreliable")
-func _update_chatlog(new_chatlog):
-	chatlog = new_chatlog
 
 # This runs on the client only.
 func _on_connected_ok():
 	var peer_id = multiplayer.get_unique_id()
-	players[peer_id] = player_info
+	Globals.players[peer_id] = player_info
 	# player_connected.emit(peer_id, player_info)
 
 func _on_connected_fail():
@@ -106,10 +86,9 @@ func _on_connected_fail():
 
 func _on_server_disconnected():
 	multiplayer.multiplayer_peer = null
-	players.clear()
+	Globals.players.clear()
 	# server_disconnected.emit()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	$Control/ChatLog.text = ""
-	$Control/ChatLog.text = '\n'.join(chatlog)
+	pass
