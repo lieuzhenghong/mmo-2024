@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://nwwtdlsplep4"]
+[gd_scene load_steps=3 format=3 uid="uid://nwwtdlsplep4"]
+
+[ext_resource type="Script" path="res://ChatInput.gd" id="1_5frsq"]
 
 [sub_resource type="GDScript" id="GDScript_puiim"]
 script/source = "extends RichTextLabel
@@ -42,8 +44,10 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_puiim")
 
-[node name="TextEdit" type="TextEdit" parent="."]
-layout_mode = 1
+[node name="ChatInput" type="Node" parent="."]
+script = ExtResource("1_5frsq")
+
+[node name="TextEdit" type="TextEdit" parent="ChatInput"]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -53,8 +57,7 @@ offset_right = -141.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 1
+[node name="Button" type="Button" parent="ChatInput"]
 anchors_preset = -1
 anchor_left = 1.0
 anchor_top = 1.0
@@ -65,3 +68,5 @@ offset_top = -80.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "Send"
+
+[connection signal="pressed" from="ChatInput/Button" to="ChatInput" method="_on_button_pressed"]
