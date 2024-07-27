@@ -28,7 +28,6 @@ func _propagate_gamestate(servers_gamestate):
 # Input Buffer global variable
 var input_buffer = {}
 
-
 # Chatlog global variable
 var chatlog = PackedStringArray(["Hello World"])
 
