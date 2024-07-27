@@ -1,11 +1,35 @@
 extends Node
 
-# This will contain player info for every player,
-# with the keys being each player's unique IDs.
-var players = {}
-var players_loaded = 0
+# Gamestate
+var gamestate = {}
 
-# Chatlog global variable (in future, gamestate)
+func _update_gamestate(player_id, point):
+	if gamestate.find_key(player_id) != null:
+		gamestate[player_id] = point
+
+var tick_rate = 0.1  # 100ms in seconds
+var time_since_last_tick = 0
+
+func _process(delta):
+	time_since_last_tick += delta
+	if time_since_last_tick >= tick_rate:
+		_on_tick()
+		time_since_last_tick -= tick_rate
+
+func _on_tick():
+	# This function will be called every 100ms
+	_propagate_gamestate.rpc(gamestate)
+
+@rpc("authority", "unreliable")
+func _propagate_gamestate(servers_gamestate):
+	gamestate = servers_gamestate
+	print(gamestate)
+
+# Input Buffer global variable
+var input_buffer = {}
+
+
+# Chatlog global variable
 var chatlog = PackedStringArray(["Hello World"])
 
 signal chatlog_updated
@@ -16,10 +40,10 @@ func change_chatlog(new_string):
 
 # When the chatlog updates, update the chatlog on all peers
 func _on_chatlog_update():
-	_update_chatlog.rpc(chatlog)
+	_propagate_chatlog.rpc(chatlog)
 
 @rpc("any_peer", "call_local", "unreliable")
-func _update_chatlog_request(text):
+func _request_update_chatlog(text):
 	# Server should check here. This is an example check
 	var sender_id = multiplayer.get_remote_sender_id()
 	if (text != "Donald"):
@@ -28,5 +52,7 @@ func _update_chatlog_request(text):
 		change_chatlog(str(sender_id) + ": " + "GAYLORD") 
 	
 @rpc("authority", "unreliable")
-func _update_chatlog(new_chatlog):
+func _propagate_chatlog(new_chatlog):
 	chatlog = new_chatlog
+	
+
