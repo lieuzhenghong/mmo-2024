@@ -25,9 +25,10 @@ func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	$Control/Button.pressed.connect(_on_button_pressed)
 	
 	chatlog_updated.connect(_on_chatlog_update)
-	if OS.has_feature("server") or OS.has_feature("editor"):
+	if OS.has_feature("server"): # or OS.has_feature("editor"):
 		# Create a new global lobby
 		setup_server()
 	else:
@@ -36,6 +37,13 @@ func _ready():
 const PORT = 6969
 const MAX_CLIENTS = 4
 const IP_ADDRESS = "192.168.18.30"
+
+
+func _on_button_pressed():
+	
+	var t = $Control/TextEdit.get_text()
+	chatlog.push_back(t)
+	$Control/TextEdit.clear()
 
 func setup_server():
 	print("Setting up a server")
