@@ -25,8 +25,9 @@ func _process(delta):
 			players[id] = player
 			
 	for id in players.keys():
-		var player = players[id]
-		player.position = Globals.gamestate[id]
+		if id in Globals.gamestate.keys():
+			var player = players[id]
+			player.position = Globals.gamestate[id]
 	
 func _input(event):
 	# Check if the input event is a mouse button press
