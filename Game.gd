@@ -34,4 +34,4 @@ func _input(event):
 	if event is InputEventMouseButton and event.pressed:
 		# Update the target position to the mouse click position
 		 # player.position = event.position
-		pass
+		Globals._request_update_gamestate(event.position)
