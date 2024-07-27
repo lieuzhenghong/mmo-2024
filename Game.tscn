@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6tab4e0ig2po"]
+
+[ext_resource type="PackedScene" uid="uid://uwb7s3m6n17f" path="res://Player.tscn" id="1_sf7ta"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_gsjxn"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_sf7ta")]
+position = Vector2(382, 370)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+z_index = -1
+offset_top = -4.0
+offset_right = 630.0
+offset_bottom = 1006.0
+texture = SubResource("CanvasTexture_gsjxn")
