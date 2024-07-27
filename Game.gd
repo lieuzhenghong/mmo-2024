@@ -8,7 +8,7 @@ var player_scene = preload("res://Player.tscn")
 func instantiate_player():
 	var player = player_scene.instantiate()
 	add_child(player)
-	player
+	return player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,7 +23,7 @@ func _process(delta):
 		if not (id in players.keys()):
 			var player = instantiate_player()
 			players[id] = player
-		
+			
 	for id in players.keys():
 		var player = players[id]
 		player.position = Globals.gamestate[id]
