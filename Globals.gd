@@ -16,15 +16,16 @@ func change_chatlog(new_string):
 
 # When the chatlog updates, update the chatlog on all peers
 func _on_chatlog_update():
-	_update_chatlog.rpc(Globals.chatlog)
+	_update_chatlog.rpc(chatlog)
 
 @rpc("any_peer", "call_remote", "unreliable")
 func _update_chatlog_request(text):
 	# Server should check here. This is an example check
+	var sender_id = multiplayer.get_remote_sender_id()
 	if (text != "Donald"):
-		change_chatlog(text)
+		change_chatlog(sender_id + ": " + text)
 	else:
-		change_chatlog("GAYLORD") 
+		change_chatlog(sender_id + ": " + "GAYLORD") 
 	
 @rpc("authority", "unreliable")
 func _update_chatlog(new_chatlog):
