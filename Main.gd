@@ -9,7 +9,7 @@ func _ready():
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
 	Globals.chatlog_updated.connect(Globals._on_chatlog_update)
-	if Globals.SERVER_FLAG:
+	if Constants.SERVER_FLAG:
 		# Create a new global lobby
 		setup_server()
 	else:

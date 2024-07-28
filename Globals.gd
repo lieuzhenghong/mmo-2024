@@ -1,6 +1,5 @@
 extends Node
 
-var SERVER_FLAG = true
 # Gamestate
 var gamestate = {}
 
@@ -27,7 +26,7 @@ func _process(delta):
 func _on_tick():
 	# This function will be called every 100ms
 	print(gamestate)
-	if SERVER_FLAG:
+	if Constants.SERVER_FLAG:
 		_propagate_gamestate.rpc(gamestate)
 
 @rpc("authority", "unreliable")
